@@ -1,74 +1,95 @@
--- ---- Dreamwave Theme ---- --
--- Deep dreamy blue theme for Neovim
--- Self-contained, no external plugins required
+-- TokyoNight with transparent background + pink accents (no orange)
+-- lazy.nvim only (NOT LazyVim)
 
 return {
   {
-    "LazyVim/LazyVim",
+    'folke/tokyonight.nvim',
+    lazy = false,
+    priority = 1000,
     opts = {
-      colorscheme = function()
-        -- 🎨 Dreamwave Color Palette
-        local colors = {
-          bg        = "#0A0F1A",  -- Deep midnight blue
-          fg        = "#EAF6FF",  -- Soft icy-white text
-          title     = "#4A90E8",  -- Bright but calm blue for headings
-          highlight = "#5A8FFF",  -- Hover/focus accent
-          selected  = "#1D2A44",  -- Selected item background
-          inactive  = "#6E7FAF",  -- Dim text / secondary info
-          border    = "#1A2B4C",  -- Borders/dividers
-          mid       = "#3F6FD1",  -- Mid-tone blue (numbers, constants)
-          darkmid   = "#2E4A8C",  -- Deep accent for strings or subtle highlights
-        }
+      style = 'night', -- try "moon" later if you want more purple
+      transparent = true,
+      terminal_colors = true,
 
-        vim.cmd("highlight clear")
-        vim.cmd("set termguicolors")
+      styles = {
+        sidebars = 'transparent',
+        floats = 'transparent',
+      },
 
-        -- ✨ Core Syntax
-        vim.api.nvim_set_hl(0, "Normal",      { fg = colors.fg, bg = colors.bg })
-        vim.api.nvim_set_hl(0, "Comment",     { fg = colors.inactive, italic = true })
-        vim.api.nvim_set_hl(0, "Constant",    { fg = colors.mid })
-        vim.api.nvim_set_hl(0, "String",      { fg = colors.darkmid })
-        vim.api.nvim_set_hl(0, "Number",      { fg = colors.mid })
-        vim.api.nvim_set_hl(0, "Boolean",     { fg = colors.highlight, bold = true })
-        vim.api.nvim_set_hl(0, "Identifier",  { fg = colors.fg })
-        vim.api.nvim_set_hl(0, "Function",    { fg = colors.title, bold = true })
-        vim.api.nvim_set_hl(0, "Statement",   { fg = colors.highlight, bold = true })
-        vim.api.nvim_set_hl(0, "Keyword",     { fg = colors.highlight, bold = true })
-        vim.api.nvim_set_hl(0, "Type",        { fg = colors.mid })
-        vim.api.nvim_set_hl(0, "Special",     { fg = colors.title })
+      -- 1️⃣ Override TokyoNight base colors
+      on_colors = function(c)
+        c.orange = '#FF7AE6' -- 🔥 replace orange with pink
+      end,
 
-        -- 🧭 UI Elements
-        vim.api.nvim_set_hl(0, "CursorLine",    { bg = "#101726" })
-        vim.api.nvim_set_hl(0, "CursorLineNr",  { fg = colors.highlight, bold = true })
-        vim.api.nvim_set_hl(0, "LineNr",        { fg = colors.inactive })
-        vim.api.nvim_set_hl(0, "Visual",        { bg = colors.selected })
-        vim.api.nvim_set_hl(0, "Search",        { fg = colors.bg, bg = colors.highlight })
-        vim.api.nvim_set_hl(0, "IncSearch",     { fg = colors.bg, bg = colors.mid })
-        vim.api.nvim_set_hl(0, "Pmenu",         { fg = colors.fg, bg = "#101726" })
-        vim.api.nvim_set_hl(0, "PmenuSel",      { fg = colors.fg, bg = colors.selected, bold = true })
-        vim.api.nvim_set_hl(0, "StatusLine",    { fg = colors.fg, bg = "#101726" })
-        vim.api.nvim_set_hl(0, "StatusLineNC",  { fg = colors.inactive, bg = "#0E1323" })
-        vim.api.nvim_set_hl(0, "VertSplit",     { fg = colors.border })
-        vim.api.nvim_set_hl(0, "Title",         { fg = colors.title, bold = true })
-        vim.api.nvim_set_hl(0, "ErrorMsg",      { fg = colors.bg, bg = colors.highlight, bold = true })
-        vim.api.nvim_set_hl(0, "WarningMsg",    { fg = colors.bg, bg = colors.mid })
-        vim.api.nvim_set_hl(0, "NonText",       { fg = "#1A2436" })
-        vim.api.nvim_set_hl(0, "ColorColumn",   { bg = "#101726" })
+      -- 2️⃣ Fix highlights & force transparency
+      on_highlights = function(hl, c)
+        local none = 'NONE'
+        local pink = '#FF7AE6'
 
-        -- 🧠 LSP Diagnostics
-        vim.api.nvim_set_hl(0, "DiagnosticError", { fg = "#FF6BB5" })
-        vim.api.nvim_set_hl(0, "DiagnosticWarn",  { fg = colors.mid })
-        vim.api.nvim_set_hl(0, "DiagnosticInfo",  { fg = colors.inactive })
-        vim.api.nvim_set_hl(0, "DiagnosticHint",  { fg = colors.title })
+        -- Core transparency
+        hl.Normal = { bg = none }
+        hl.NormalNC = { bg = none }
+        hl.SignColumn = { bg = none }
+        hl.LineNr = { bg = none }
+        hl.CursorLineNr = { bg = none }
 
-        -- 🔍 Treesitter (modern syntax)
-        vim.api.nvim_set_hl(0, "@variable",   { fg = colors.fg })
-        vim.api.nvim_set_hl(0, "@function",   { fg = colors.title, bold = true })
-        vim.api.nvim_set_hl(0, "@keyword",    { fg = colors.highlight, bold = true })
-        vim.api.nvim_set_hl(0, "@string",     { fg = colors.darkmid })
-        vim.api.nvim_set_hl(0, "@type",       { fg = colors.mid })
-        vim.api.nvim_set_hl(0, "@constant",   { fg = colors.mid })
+        hl.VertSplit = { bg = none }
+        hl.WinSeparator = { bg = none }
+
+        hl.StatusLine = { bg = none }
+        hl.StatusLineNC = { bg = none }
+        hl.TabLine = { bg = none }
+        hl.TabLineFill = { bg = none }
+        hl.TabLineSel = { bg = none }
+
+        -- Cursor / selection
+        hl.CursorLine = { bg = c.bg_highlight }
+        hl.Visual = { bg = c.bg_visual }
+
+        -- Menus (glass look)
+        hl.Pmenu = { bg = c.bg_dark }
+        hl.PmenuSel = { bg = c.bg_highlight }
+
+        -- Floating windows
+        hl.NormalFloat = { bg = none }
+        hl.FloatBorder = { bg = none }
+        hl.FloatTitle = { bg = none }
+
+        -- Telescope (transparent)
+        hl.TelescopeNormal = { bg = none }
+        hl.TelescopeBorder = { bg = none }
+        hl.TelescopePromptNormal = { bg = none }
+        hl.TelescopePromptBorder = { bg = none }
+        hl.TelescopeResultsNormal = { bg = none }
+        hl.TelescopeResultsBorder = { bg = none }
+        hl.TelescopePreviewNormal = { bg = none }
+        hl.TelescopePreviewBorder = { bg = none }
+
+        -- Diagnostics: replace orange/yellow accents with pink where appropriate
+        hl.DiagnosticWarn = { fg = pink }
+        hl.DiagnosticUnderlineWarn = { undercurl = true, sp = pink }
+
+        -- Treesitter / syntax tweaks that still reference orange internally
+        hl['@number'] = { fg = pink }
+        hl['@constant'] = { fg = pink }
+        hl['@punctuation.special'] = { fg = pink }
+
+        -- Lazy UI (if you open :Lazy)
+        hl.LazyNormal = { bg = none }
       end,
     },
+
+    config = function(_, opts)
+      require('tokyonight').setup(opts)
+      vim.cmd.colorscheme 'tokyonight'
+
+      -- Safety net: re-force transparency if anything resets it
+      vim.api.nvim_create_autocmd('ColorScheme', {
+        callback = function()
+          vim.api.nvim_set_hl(0, 'Normal', { bg = 'NONE' })
+          vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'NONE' })
+        end,
+      })
+    end,
   },
 }
